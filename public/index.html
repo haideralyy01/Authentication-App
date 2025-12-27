@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication App</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+<script>
+    async function signup() {
+        const username = document.getElementById("signup-username").value;
+        const password = document.getElementById("signup-password").value;
+
+        await axios.post("http://localhost:3000/signup", {
+            username: username,
+            password: password
+       });
+       alert("You are signed up")
+    }
+
+    async function signin() {
+        const username = document.getElementById("signin-username").value;
+        const password = document.getElementById("signin-password").value;
+
+        const response = await axios.post("http://localhost:3000/signin", {
+            username: username,
+            password: password
+        });
+        localStorage.setItem("token", response.data.token);
+
+        alert("You are signed in")
+    }
+
+    async function getUserInformation() {
+        const response = await axios.get("http://localhost:3000/me", {
+            headers: {
+                token: localStorage.getItem("token")
+            }
+        });
+        document.getElementById("Information").innerText = JSON.stringify(response.data);
+    }
+    getUserInformation();
+</script>
+<body>
+    <div>
+        Signup
+        <input type="text", id="signup-username" placeholder="Username">
+        <input type="password", id="signup-password" placeholder="Password">
+        <button onclick="signup()" id="signup-btn">Sign Up</button>
+    </div>
+
+    <div>
+        Signin
+        <input type="text", id="signin-username" placeholder="Username">
+        <input type="password", id="signin-password" placeholder="Password">
+        <button onclick="signin()" id="signup-btn">Sign In</button>
+    </div>
+
+    <div>
+        User Information
+        <div id="Information"></div>
+    </div>
+
+    <div>
+        <button onclick="signout()" id="signout-btn">Sign Out</button>
+    </div>
+</body>
+</html>
