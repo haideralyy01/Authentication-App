@@ -4,67 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <body>
-    <script>
-        async function signup() {
-            const username = document.getElementById("signup-username").value;
-            const password = document.getElementById("signup-password").value;
-
-            await axios.post("http://localhost:3000/signup", {
-                username: username,
-                password: password
-            });
-            alert("You are signed up");
-            document.getElementById("signup-username").value = "";
-            document.getElementById("signup-password").value = "";
-        }
-
-        async function signin() {
-            const username = document.getElementById("signin-username").value;
-            const password = document.getElementById("signin-password").value;
-
-            const response = await axios.post("http://localhost:3000/signin", {
-                username: username,
-                password: password
-            });
-            localStorage.setItem("token", response.data.token);
-
-            alert("You are signed in");
-            document.getElementById("signin-username").value = "";
-            document.getElementById("signin-password").value = "";
-            getUserInformation();
-        }
-
-        async function getUserInformation() {
-          const token = localStorage.getItem("token");
-          const infoDiv = document.getElementById("Information");
-
-          if (!token) {
-            infoDiv.innerText = "Not signed in.";
-            return;
-          }
-
-          try {
-            const response = await axios.get("http://localhost:3000/me", {
-              headers: {
-                token: token
-              }
-            });
-            infoDiv.innerText = "Username: " + response.data.username + " | Password: " + response.data.password;
-          } catch (err) {
-            console.error(err);
-            infoDiv.innerText = "Error fetching user info.";
-          }
-        }
-
-        function signout() {
-            localStorage.removeItem("token");
-            document.getElementById("Information").innerText = "";
-            alert("You have signed out");
-        }
-    </script>
     <div>
         Signup
         <input type="text", id="signup-username" placeholder="Username">
@@ -87,5 +29,7 @@
     <div>
         <button onclick="signout()" id="signout-btn">Sign Out</button>
     </div>
+
+    <script src="./script.js"></script>
 </body>
 </html>
